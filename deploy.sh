@@ -45,14 +45,18 @@ if [ ! -f docker-compose.yml ]; then
     exit 1
 fi
 
-# Set up environment file
+# Set up environment files
 echo "⚙️  Setting up environment configuration..."
-if [ ! -f .env ]; then
-    if [ -f .env.example ]; then
-        cp .env.example .env
+
+# Set up backend environment file
+echo "Setting up backend environment..."
+if [ ! -f backend/.env ]; then
+    if [ -f backend/.env.example ]; then
+        cp backend/.env.example backend/.env
+        echo "✅ Created backend/.env from backend/.env.example"
     else
-        echo "Creating .env file..."
-        cat > .env << 'EOL'
+        echo "Creating backend/.env file..."
+        cat > backend/.env << 'EOL'
 # Django Settings
 DEBUG=False
 SECRET_KEY=your-super-secret-key-here
@@ -78,14 +82,39 @@ GOOGLE_CLIENT_ID=your-google-client-id
 # Email Configuration
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-email-password
-
-# Frontend
-FRONTEND_API_URL=http://your-ec2-public-ip:8000/api
 EOL
     fi
-    echo "❗ Please edit the .env file with your production values!"
-    echo "Run: nano .env"
-    echo "Press any key to continue after editing .env file..."
+    echo "❗ Please edit the backend/.env file with your production values!"
+    echo "Run: nano backend/.env"
+else
+    echo "✅ Backend .env file already exists"
+fi
+
+# Set up frontend environment file
+echo "Setting up frontend environment..."
+if [ ! -f frontend/.env ]; then
+    echo "Creating frontend/.env file..."
+    cat > frontend/.env << 'EOL'
+# Frontend Configuration
+REACT_APP_API_URL=http://your-ec2-public-ip:8000/api
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+EOL
+    echo "✅ Created frontend/.env"
+    echo "❗ Please edit the frontend/.env file with your production values!"
+    echo "Run: nano frontend/.env"
+else
+    echo "✅ Frontend .env file already exists"
+fi
+
+# Check if environment files need to be configured
+if grep -q "your-" backend/.env || grep -q "your-" frontend/.env; then
+    echo ""
+    echo "⚠️  WARNING: Environment files contain placeholder values!"
+    echo "Please update the following files with your production values:"
+    echo "  - backend/.env"
+    echo "  - frontend/.env"
+    echo ""
+    echo "Press any key to continue after editing environment files..."
     read -n 1
 fi
 

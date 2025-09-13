@@ -51,13 +51,17 @@ COPY . .
 # Set Django settings module for production
 ENV DJANGO_SETTINGS_MODULE=hireiq_backend.settings_production
 
+# Create a non-root user first
+RUN adduser --disabled-password --gecos '' appuser
+
+# Change ownership of all app files to appuser
+RUN chown -R appuser:appuser /app
+
+# Switch to appuser
+USER appuser
+
 # Collect static files (only if we have a manage.py)
 RUN if [ -f "manage.py" ]; then python manage.py collectstatic --noinput --clear; fi
-
-# Create a non-root user
-RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser:appuser /app
-USER appuser
 
 # Expose port
 EXPOSE 8000

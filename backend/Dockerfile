@@ -42,7 +42,7 @@ RUN pip install --no-cache-dir transformers==4.36.2 sentence-transformers==2.2.2
 # Install remaining dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create media directory for file uploads
+# Create media directory for file uploads with proper permissions
 RUN mkdir -p /app/media/resumes /app/logs /app/static
 
 # Copy project files
@@ -54,8 +54,10 @@ ENV DJANGO_SETTINGS_MODULE=hireiq_backend.settings_production
 # Create a non-root user first
 RUN adduser --disabled-password --gecos '' appuser
 
-# Change ownership of all app files to appuser
-RUN chown -R appuser:appuser /app
+# Change ownership of all app files to appuser and set proper permissions
+RUN chown -R appuser:appuser /app && \
+    chmod -R 755 /app && \
+    chmod -R 777 /app/logs /app/media /app/static
 
 # Switch to appuser
 USER appuser

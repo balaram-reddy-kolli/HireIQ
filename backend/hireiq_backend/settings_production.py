@@ -63,7 +63,7 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
-# Logging configuration
+# Logging configuration - File and console logging for production
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -103,5 +103,6 @@ LOGGING = {
     },
 }
 
-# Create logs directory if it doesn't exist
-os.makedirs('/app/logs', exist_ok=True)
+# Ensure logs directory exists with proper permissions
+import os
+os.makedirs('/app/logs', mode=0o777, exist_ok=True)

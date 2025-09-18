@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     pkg-config \
     libgomp1 \
+    gosu \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -42,9 +43,6 @@ RUN pip install --no-cache-dir transformers==4.36.2 sentence-transformers==2.2.2
 # Install remaining dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create media directory for file uploads with proper permissions
-RUN mkdir -p /app/media/resumes /app/logs /app/static
-
 # Copy project files
 COPY . .
 
@@ -57,13 +55,14 @@ ENV DJANGO_SETTINGS_MODULE=hireiq_backend.settings_production
 # Create a non-root user first
 RUN adduser --disabled-password --gecos '' appuser
 
-# Change ownership of all app files to appuser and set proper permissions
-RUN chown -R appuser:appuser /app && \
+# Create directories and set proper permissions for mounted volumes
+RUN mkdir -p /app/media/resumes /app/logs /app/static && \
+    chown -R appuser:appuser /app && \
     chmod -R 755 /app && \
     chmod -R 777 /app/logs /app/media /app/static
 
-# Switch to appuser
-USER appuser
+# Don't switch to appuser yet - let the start script handle this
+# USER appuser
 
 # Collect static files (only if we have a manage.py)
 RUN if [ -f "manage.py" ]; then python manage.py collectstatic --noinput --clear; fi

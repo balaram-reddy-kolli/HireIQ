@@ -80,6 +80,7 @@ services:
       sh -c "
         mkdir -p /app/logs /app/media /app/static &&
         chmod 777 /app/logs /app/media /app/static &&
+        python manage.py migrate &&
         python manage.py collectstatic --noinput --clear &&
         python manage.py runserver 0.0.0.0:8000
       "
@@ -88,7 +89,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 120s
 
   # React Frontend
   frontend:

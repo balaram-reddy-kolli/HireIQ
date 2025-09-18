@@ -132,14 +132,6 @@ docker-compose up -d
 echo "⏳ Waiting for services to start..."
 sleep 30
 
-# Run database migrations
-echo "🗃️  Running database migrations..."
-docker-compose exec backend python manage.py migrate
-
-# Collect static files
-echo "📁 Collecting static files..."
-docker-compose exec backend python manage.py collectstatic --noinput
-
 # Check service status
 echo "✅ Checking service status..."
 docker-compose ps

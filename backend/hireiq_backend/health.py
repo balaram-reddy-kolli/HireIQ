@@ -19,10 +19,10 @@ def health_check(request):
     
     # Check MongoDB connection
     try:
-        # Try to ping the database with a timeout
+        # Use the underlying MongoClient to ping the admin database
         from mongoengine import connection
-        db = connection.get_db()
-        db.admin.command('ping')
+        client = connection.get_connection()
+        client.admin.command('ping')
         health_status['services']['mongodb'] = 'healthy'
     except Exception as e:
         health_status['services']['mongodb'] = f'unhealthy: {str(e)}'

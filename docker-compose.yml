@@ -76,14 +76,15 @@ services:
         condition: service_healthy
     networks:
       - hireiq-network
-    command: >
-      sh -c "
-        mkdir -p /app/logs /app/media /app/static &&
-        chmod 777 /app/logs /app/media /app/static &&
-        python manage.py migrate &&
-        python manage.py collectstatic --noinput --clear &&
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /app/logs /app/media /app/static
+        chmod 777 /app/logs /app/media /app/static
+        python manage.py migrate
+        python manage.py collectstatic --noinput --clear
         python manage.py runserver 0.0.0.0:8000
-      "
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
       interval: 30s

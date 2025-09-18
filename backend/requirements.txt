@@ -23,8 +23,8 @@ defusedxml==0.7.1
 # AI/ML - Core
 groq==0.31.1
 transformers==4.36.2
-sentence-transformers==2.2.2
-torch==2.8.0
+sentence-transformers==2.7.0
+torch==2.1.0
 numpy==1.26.4
 scikit-learn==1.7.1
 huggingface-hub==0.34.4

@@ -58,10 +58,10 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
 # Update redirect URLs for production domain
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://hireiq.ddns.net/'
-SOCIAL_AUTH_LOGIN_URL = '/auth/login/google-oauth2/'
+SOCIAL_AUTH_LOGIN_URL = '/complete/google-oauth2/'
 
-# Add allowed redirect URIs for Google OAuth
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://hireiq.ddns.net/api/auth/google/callback/'
+# Remove this line - it's not a valid setting
+# SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://hireiq.ddns.net/api/auth/google/callback/'
 
 # Redis cache configuration
 REDIS_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')

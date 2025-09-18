@@ -111,11 +111,12 @@ try:
 except Exception as e:
     print(f"Failed to connect to MongoDB Atlas: {e}")
 
-# CORS settings - More permissive for development
-CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins during development
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = os.getenv('DEBUG', 'False') == 'True'  # Allow all origins only in development
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://hireiq.ddns.net",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -126,6 +127,7 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://hireiq.ddns.net",
 ]
 
 # Additional CORS settings for Google OAuth

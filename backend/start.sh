@@ -16,5 +16,18 @@ python manage.py migrate
 echo "Collecting static files..."
 python manage.py collectstatic --noinput --clear
 
-echo "Starting Django development server..."
-python manage.py runserver 0.0.0.0:8000
+if [ "$USE_GUNICORN" = "true" ]; then
+	echo "Starting Gunicorn application server..."
+	# Bind on 0.0.0.0:8000 with 3 workers and async workers suitable for API
+	exec gunicorn hireiq_backend.wsgi:application \
+		--bind 0.0.0.0:8000 \
+		--workers ${GUNICORN_WORKERS:-3} \
+		--worker-class ${GUNICORN_WORKER_CLASS:-gthread} \
+		--threads ${GUNICORN_THREADS:-4} \
+		--timeout ${GUNICORN_TIMEOUT:-180} \
+		--access-logfile '-' \
+		--error-logfile '-'
+else
+	echo "Starting Django development server..."
+	python manage.py runserver 0.0.0.0:8000
+fi

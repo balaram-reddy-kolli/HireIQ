@@ -78,3 +78,6 @@ PyYAML==6.0.2
 certifi>=2025.0.0
 urllib3>=1.26.0,<2.0.0
 charset-normalizer>=3.0.0
+
+# WSGI Server
+gunicorn==21.2.0

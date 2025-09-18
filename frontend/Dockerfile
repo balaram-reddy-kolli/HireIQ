@@ -11,7 +11,14 @@ COPY package*.json ./
 RUN npm ci --only=production --silent
 
 # Copy source code
+ARG REACT_APP_API_URL
+ARG REACT_APP_GOOGLE_CLIENT_ID
+
 COPY . .
+
+# Inject build-time env vars if needed for CRA/Vite
+RUN echo "REACT_APP_API_URL=${REACT_APP_API_URL}" > .env.production && \
+    echo "REACT_APP_GOOGLE_CLIENT_ID=${REACT_APP_GOOGLE_CLIENT_ID}" >> .env.production
 
 # Build the React app
 RUN npm run build
